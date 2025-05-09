@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .message {
+      text-align: center;
+      font-size: 24px;
+      margin-top: 10px;
+    }
+    #container {
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <button onclick="showMessage()" style="text-align: center; margin-left: 550px; margin-top: 100px;">Bấm vào đây lấy mã thẻ</button>
+  
+  <div id="container"></div>
+
+  <script>
+    function showMessage() {
+      const container = document.getElementById("container");
+      const newMessage = document.createElement("p");
+      newMessage.className = "message";
+      newMessage.textContent = "CÓ CÁI NỊT HA HA HA HA HA HA";
+      container.appendChild(newMessage);
+    }
+  </script>
+</body>
+</html>
