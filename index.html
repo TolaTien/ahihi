@@ -1,33 +1,818 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <link rel="icon" href="https://static-00.iconduck.com/assets.00/supermarket-icon-2048x2048-73nl4xtf.png">
+  <title>Hệ thống quản lý</title>
   <style>
-    .message {
+    body{
+      margin: 0;
+      padding: 0;
+    }
+    .hieuung {
+      transition: transform 0.3s ease;
+    }
+
+    .hieuung:hover {
+      transform: scale(1.1);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Đăng nhập */
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+
+    .left, .right {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .left {
+      background-color: #FFA168;
+    }
+
+    .left img {
+      max-width: 60%;
+    }
+
+    .right {
+      background-color: #f0f0f0;
+    }
+
+    .login-form {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 300px;
       text-align: center;
-      font-size: 24px;
-      margin-top: 10px;
     }
-    #container {
-      margin-top: 50px;
+
+    .login-form input, .login-form button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
     }
+
+    .login-form button {
+      background-color: #3B82F6;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .login-form button:hover {
+      background-color: #2563EB;
+    }
+
+    /* Hệ thống quản lý */
+    #app {
+      display: flex;
+      height: 100vh;
+    }
+
+    nav {
+      background:#466bbb;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      width: 200px;
+      padding: 10px;
+    }
+
+    nav button {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      padding: 10px;
+      text-align: left;
+      transition: transform 0.3s ease
+    }
+
+    nav button:hover {
+      background-color: #444;
+      transform: scale(1.15);
+
+    }
+
+    .main {
+      flex-grow: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .main section {
+      display: none;
+    }
+
+    .main section.active {
+      display: block;
+    }
+
+    .dashboard-chart {
+      width: 100%;
+      max-width: 600px;
+      height: 300px;
+    }
+  
+    .tieude{
+      font-size: 20px;
+    }
+    .anh {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .item {
+      width: 18%;
+      font-family: Arial
+    }
+
+    .item img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    .price {
+      margin-top: 8px;
+      font-weight: bold;
+      font-size: 16px;
+      color: #d32f2f;
+    }
+
+
   </style>
 </head>
 <body>
-  <button onclick="showMessage()" style="text-align: center; margin-left: 550px; margin-top: 100px;">Bấm vào đây lấy mã thẻ</button>
+
+  <!-- Màn hình đăng nhập -->
+  <div class="container" id="login-screen">
+    <div class="left">
+      <img src="supermarket.png" alt="Cute character" />
+    </div>
+    <div class="right">
+      <div class="login-form">
+        <h2>Xin chào</h2>
+        <input type="text" id="username" placeholder="Tên đăng nhập" />
+        <input type="password" id="password" placeholder="Mật khẩu" />
+        <button onclick="login()">Đăng nhập</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hệ thống quản lý -->
+  <div id="app" class="hidden">
+    <nav>
+      <button onclick="show('dashboard')">Dashboard</button>
+      <button onclick="show('products')">Sản phẩm</button>
+      <button onclick="show('categories')">Danh mục</button>
+      <button onclick="show('suppliers')">Nhà cung cấp</button>
+      <button onclick="show('customers')">Khách hàng</button>
+      <button onclick="show('employees')">Nhân viên</button>
+      <button onclick="show('sales')">Bán hàng</button>
+      <button onclick="show('inventory')">Nhập kho</button>
+      <button onclick="show('reports')">Báo cáo</button>
+    </nav>
+
+    <div class="main">
+<section id="dashboard" class="active">
+  <h2>Dashboard</h2>
+
+  <!-- Thông tin tổng quan -->
+  <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
+    <div style="flex: 1; min-width: 200px; background: #e0f7fa; padding: 20px; border-radius: 10px;" class="hieuung">
+      <h3>Doanh thu hôm nay</h3>
+      <p><strong>15.000.000₫</strong></p>
+    </div>
+    <div style="flex: 1; min-width: 200px; background: #fff3e0; padding: 20px; border-radius: 10px;" class="hieuung">
+      <h3>Hóa đơn hôm nay</h3>
+      <p><strong>85 đơn</strong></p>
+    </div>
+    <div style="flex: 1; min-width: 200px; background: #fce4ec; padding: 20px; border-radius: 10px;" class="hieuung">
+      <h3>Sản phẩm sắp hết hàng</h3>
+      <p><strong>12 mặt hàng</strong></p>
+    </div>
+  </div>
+
+  <!-- Biểu đồ doanh thu -->
+  <div style="margin-top: 40px;">
+    <h3>Biểu đồ doanh thu theo thời gian</h3>
+    <div style="text-align: center;">
+      <img src="https://video.vietjack.com/upload2/quiz_source1/2024/01/blobid5-1706448872.png"
+           alt="Biểu đồ doanh thu"
+           style="max-width: 100%; height: auto;">
+    </div>
+  </div>
+</section>
+
+
+<section id="products">
+  <h2 style="color: red;">Quản lý sản phẩm</h2>
+  <br><br><br><br>
+  <div>
+  <p class="tieude">Khuyến mại hot</p>
+
+  <div class="anh">
+    <div class="item">
+      <img src="https://cdn.tgdd.vn/Products/Images/7264/289439/mvw-ml073-01-nam-thumb-fix-600x600.jpg">
+      <p class="price">1.200.000$</p>
+    </div>
+    <div class="item">
+      <img src="https://cdn.tgdd.vn/2024/09/timerseo/220733.jpg">
+      <p class="price">990.000$</p>
+    </div>
+    <div class="item">
+      <img src="https://cdn.tgdd.vn/2024/09/timerseo/326289.jpg">
+      <p class="price">890.000$</p>
+    </div>
+    <div class="item">
+      <img src="https://cdn.tgdd.vn/2024/09/timerseo/215851.jpg">
+      <p class="price">950.000$</p>
+    </div>
+    <div class="item">
+      <img src="https://cdn.tgdd.vn/Products/Images/7264/313022/citizen-em0382-51d-nu-thumb-600x600.jpg">
+      <p class="price">2.500.000$</p>
+    </div>
+    <div class="item">
+      <img src="https://cdn.tgdd.vn/Products/Images/7077/326906/masstel-smart-hero-6-xanh-tb-1-600x600.jpg">
+      <p class="price">490.000$</p>
+    </div>
+    <div class="item">
+      <img src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/7264/337093/baby-g-bgd-10kkm-1dr-nu-thumb-638808703462011916-600x600.jpg">
+      <p class="price">1.990.000$</p>
+    </div>
+        <div class="item">
+      <img src="https://cdn.tgdd.vn/Products/Images/7264/327758/orient-ra-tx0201l10b-nam-thumb-600x600.jpg">
+      <p class="price">9.990.000$</p>
+    </div>
+    <div class="item">
+      <img src="https://cdn.tgdd.vn/2024/09/timerseo/286644.jpg">
+      <p class="price">1.232.456$</p>
+    </div>    
+    <div class="item">
+      <img src="https://cdn.tgdd.vn/2024/09/timerseo/245676.jpg">
+      <p class="price">1.111.111$</p>
+    </div> 
+  </div>
+  </div><br><br>
+  <div>
+    <p class="tieude">Gợi ý cho bạn</p>
+      <div class="anh">
+    <div class="item">
+      <img src="https://cdn.tgdd.vn/Products/Images/7264/289439/mvw-ml073-01-nam-thumb-fix-600x600.jpg">
+      <p class="price">1.200.000$</p>
+    </div>
+    <div class="item">
+      <img src="https://cdn.tgdd.vn/2024/09/timerseo/220733.jpg">
+      <p class="price">990.000$</p>
+    </div>
+    <div class="item">
+      <img src="https://cdn.tgdd.vn/2024/09/timerseo/326289.jpg">
+      <p class="price">890.000$</p>
+    </div>
+    <div class="item">
+      <img src="https://cdn.tgdd.vn/2024/09/timerseo/215851.jpg">
+      <p class="price">950.000$</p>
+    </div>
+    <div class="item">
+      <img src="https://cdn.tgdd.vn/Products/Images/7264/313022/citizen-em0382-51d-nu-thumb-600x600.jpg">
+      <p class="price">2.500.000$</p>
+    </div>
+    <div class="item">
+      <img src="https://cdn.tgdd.vn/Products/Images/7077/326906/masstel-smart-hero-6-xanh-tb-1-600x600.jpg">
+      <p class="price">490.000$</p>
+    </div>
+    <div class="item">
+      <img src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/7264/337093/baby-g-bgd-10kkm-1dr-nu-thumb-638808703462011916-600x600.jpg">
+      <p class="price">1.990.000$</p>
+    </div>
+        <div class="item">
+      <img src="https://cdn.tgdd.vn/Products/Images/7264/327758/orient-ra-tx0201l10b-nam-thumb-600x600.jpg">
+      <p class="price">9.990.000$</p>
+    </div>
+    <div class="item">
+      <img src="https://cdn.tgdd.vn/Products/Images/42/332938/xiaomi-redmi-note-14-pro-gold-thumb-600x600.jpg">
+      <p class="price">1.232.456$</p>
+    </div>    
+    <div class="item">
+      <img src="https://cdn.tgdd.vn/2024/09/timerseo/245676.jpg">
+      <p class="price">1.111.111$</p>
+    </div> 
+  </div>
+
+  </div>
+
+</section>
+
+<section id="categories">
+  <h2>Quản lý danh mục</h2>
+
+  <!-- Các nút chức năng -->
+  <div style="margin-bottom: 20px;">
+    <button>➕ Thêm danh mục mới</button>
+    <button>✏️ Sửa thông tin danh mục</button>
+    <button>🗑️ Xóa danh mục</button>
+    <button>📋 Xem sản phẩm theo danh mục</button>
+  </div>
+
+  <!-- Bảng danh sách danh mục -->
+  <table border="1" style="border-collapse: collapse; width: 100%;">
+    <thead style="background-color: #f2f2f2;">
+      <tr>
+        <th>STT</th>
+        <th>Mã danh mục</th>
+        <th>Tên danh mục</th>
+        <th>Mô tả</th>
+        <th>Ngày tạo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>DM001</td>
+        <td>Thực phẩm</td>
+        <td>Các loại thực phẩm tươi sống, đóng gói</td>
+        <td>2024-01-10</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>DM002</td>
+        <td>Đồ uống</td>
+        <td>Nước giải khát, nước lọc, nước ngọt</td>
+        <td>2024-02-05</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>DM003</td>
+        <td>Gia dụng</td>
+        <td>Đồ dùng nhà bếp, vật dụng hằng ngày</td>
+        <td>2024-03-15</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<section id="suppliers">
+  <h2>Quản lý nhà cung cấp</h2>
+
+  <!-- Các nút chức năng -->
+  <div style="margin-bottom: 20px;">
+    <button>➕ Thêm nhà cung cấp</button>
+    <button>✏️ Sửa thông tin nhà cung cấp</button>
+    <button>🗑️ Xóa nhà cung cấp</button>
+    <button>📋 Xem sản phẩm theo nhà cung cấp</button>
+    <button >📦 Lịch sử nhập hàng</button>
+  </div>
+
+  <!-- Bảng danh sách nhà cung cấp -->
+  <table border="1" style="border-collapse: collapse; width: 100%;">
+    <thead style="background-color: #f2f2f2;">
+      <tr>
+        <th>STT</th>
+        <th>Mã nhà cung cấp</th>
+        <th>Tên nhà cung cấp</th>
+        <th>Địa chỉ</th>
+        <th>Số điện thoại</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>NC001</td>
+        <td>Công ty ABC</td>
+        <td>123 Đường A, TP.HCM</td>
+        <td>0123456789</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>NC002</td>
+        <td>Công ty XYZ</td>
+        <td>456 Đường B, Hà Nội</td>
+        <td>0987654321</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>NC003</td>
+        <td>Công ty 123</td>
+        <td>789 Đường C, Đà Nẵng</td>
+        <td>0911222333</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Lịch sử nhập hàng (ẩn mặc định) -->
+  <div id="historySection" style="margin-top: 30px;">
+    <h3>📦 Lịch sử nhập hàng</h3>
+    <table border="1" style="border-collapse: collapse; width: 100%;">
+      <thead style="background-color: #f9f9f9;">
+        <tr>
+          <th>Ngày nhập</th>
+          <th>Mã nhập</th>
+          <th>Mã nhà cung cấp</th>
+          <th>Sản phẩm</th>
+          <th>Số lượng</th>
+          <th>Giá nhập</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2024-04-10</td>
+          <td>NH001</td>
+          <td>NC001</td>
+          <td>Gạo Thơm</td>
+          <td>100 kg</td>
+          <td>10.000đ/kg</td>
+        </tr>
+        <tr>
+          <td>2024-04-15</td>
+          <td>NH002</td>
+          <td>NC002</td>
+          <td>Nước suối</td>
+          <td>200 chai</td>
+          <td>5.000đ/chai</td>
+        </tr>
+        <tr>
+          <td>2024-04-20</td>
+          <td>NH003</td>
+          <td>NC003</td>
+          <td>Bột giặt</td>
+          <td>50 gói</td>
+          <td>20.000đ/gói</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<section id="customers">
+  <h2>Quản lý khách hàng</h2>
+
+  <!-- Các nút chức năng -->
+  <div style="margin-bottom: 20px;">
+    <button>➕ Thêm khách hàng</button>
+    <button>✏️ Sửa thông tin khách hàng</button>
+    <button>🗑️ Xóa khách hàng</button>
+    <button >📋 Xem lịch sử mua hàng</button>
+  </div>
+
+  <!-- Bảng danh sách khách hàng -->
+  <table border="1" style="border-collapse: collapse; width: 100%;">
+    <thead style="background-color: #f2f2f2;">
+      <tr>
+        <th>STT</th>
+        <th>Mã khách hàng</th>
+        <th>Họ tên</th>
+        <th>Địa chỉ</th>
+        <th>Số điện thoại</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>KH001</td>
+        <td>Nguyễn Văn A</td>
+        <td>123 Đường X, TP.HCM</td>
+        <td>0909123456</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>KH002</td>
+        <td>Trần Thị B</td>
+        <td>456 Đường Y, Hà Nội</td>
+        <td>0912345678</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>KH003</td>
+        <td>Phạm Văn C</td>
+        <td>789 Đường Z, Đà Nẵng</td>
+        <td>0987654321</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Lịch sử mua hàng (ẩn mặc định) -->
+  <div id="customerHistorySection" style="margin-top: 30px;">
+    <h3>📋 Lịch sử mua hàng</h3>
+    <table border="1" style="border-collapse: collapse; width: 100%;">
+      <thead style="background-color: #f9f9f9;">
+        <tr>
+          <th>Ngày mua</th>
+          <th>Mã hóa đơn</th>
+          <th>Mã khách hàng</th>
+          <th>Sản phẩm</th>
+          <th>Số lượng</th>
+          <th>Tổng tiền</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2024-05-01</td>
+          <td>HD001</td>
+          <td>KH001</td>
+          <td>Điện thoại Xiaomi</td>
+          <td>1</td>
+          <td>5.000.000₫</td>
+        </tr>
+        <tr>
+          <td>2024-05-10</td>
+          <td>HD002</td>
+          <td>KH002</td>
+          <td>Đồng hồ Citizen</td>
+          <td>2</td>
+          <td>4.000.000₫</td>
+        </tr>
+        <tr>
+          <td>2024-05-15</td>
+          <td>HD003</td>
+          <td>KH003</td>
+          <td>Máy giặt</td>
+          <td>1</td>
+          <td>7.500.000₫</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<section id="employees">
+  <h2>Quản lý nhân viên</h2>
+
+  <!-- Các nút chức năng -->
+  <div style="margin-bottom: 20px;">
+    <button >➕ Thêm nhân viên mới</button>
+    <button >✏️ Sửa thông tin nhân viên</button>
+    <button >🗑️ Xóa nhân viên</button>
+  </div>
+
+  <!-- Danh sách nhân viên -->
+  <table border="1" style="border-collapse: collapse; width: 100%;" id="employeeTable">
+    <thead style="background-color: #f2f2f2;">
+      <tr>
   
-  <div id="container"></div>
+        <th>Mã nhân viên</th>
+        <th>Họ tên</th>
+        <th>Chức vụ</th>
+        <th>Số điện thoại</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>NV001</td>
+        <td>Nguyễn Văn A</td>
+        <td>Quản lý</td>
+        <td>0909123456</td>
+        <td>nguyenvana@gmail.com</td>
+      </tr>
+      <tr>
+        <td>NV002</td>
+        <td>Trần Thị B</td>
+        <td>Nhân viên bán hàng</td>
+        <td>0912233445</td>
+        <td>tranthib@yahoo.com</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Form thêm/sửa nhân viên (ẩn mặc định) -->
+  <div id="employeeForm" style="margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 8px; max-width: 400px;">
+    <h3 id="formTitle">Thêm nhân viên mới</h3>
+    <label>Mã nhân viên:</label><br />
+    <input type="text" id="empId" placeholder="NVxxx" /><br /><br />
+    
+    <label>Họ tên:</label><br />
+    <input type="text" id="empName" placeholder="Tên nhân viên" /><br /><br />
+    
+    <label>Chức vụ:</label><br />
+    <input type="text" id="empPosition" placeholder="Chức vụ" /><br /><br />
+    
+    <label>Số điện thoại:</label><br />
+    <input type="text" id="empPhone" placeholder="Số điện thoại" /><br /><br />
+    
+    <label>Email:</label><br />
+    <input type="email" id="empEmail" placeholder="Email" /><br /><br />
+    
+    <button type="submit">Lưu</button>
+  
+  </div>
+</section>
+
+
+<section id="sales" style="max-width: 900px; margin: auto; padding: 20px; font-family: Arial, sans-serif;">
+  <h2>Màn hình bán hàng</h2>
+
+  <!-- Tạo hóa đơn mới -->
+  <button id="newInvoiceBtn" style="margin-bottom: 15px;">🆕 Tạo hóa đơn mới</button>
+
+  <!-- Danh sách sản phẩm tìm kiếm -->
+  <div style="border: 1px solid #ccc; max-height: 150px; overflow-y: auto; margin-bottom: 20px;">
+    <table id="productList" style="width: 100%; border-collapse: collapse;">
+      <thead style="background: #eee;">
+        <tr>
+          <th>Tên sản phẩm</th>
+          <th>Giá</th>
+          <th>Thêm</th>
+        </tr>
+      </thead>
+        <tr>
+          <td>Táo</td>
+          <td>15,000đ</td>
+          <td><button class="addProductBtn">➕</button></td>
+        </tr>
+        <tr>
+          <td>Chuối</td>
+          <td>10,000đ</td>
+          <td><button class="addProductBtn">➕</button></td>
+        </tr>
+        <tr>
+          <td>Cam</td>
+          <td>12,000đ</td>
+          <td><button class="addProductBtn">➕</button></td>
+        </tr>
+    </table>
+  </div>
+
+<h3>Hóa đơn</h3>
+<table id="invoiceTable" border="1"  style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+  <thead style="background-color: #f0f0f0;">
+    <tr>
+      <th>Sản phẩm</th>
+      <th>Đơn giá</th>
+      <th>Số lượng</th>
+      <th>Thành tiền</th>
+      <th>Xóa</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Táo</td>
+      <td>15,000đ</td>
+      <td><input type="number" value="1" min="1" style="width: 60px;"  /></td>
+      <td>15,000đ</td>
+      <td><button >❌</button></td>
+    </tr>
+    <tr>
+      <td>Chuối</td>
+      <td>10,000đ</td>
+      <td><input type="number" value="1" min="1" style="width: 60px;"></td>
+      <td>10,000đ</td>
+      <td><button>❌</button></td>
+    </tr>
+    <tr>
+      <td>Cam</td>
+      <td>12,000đ</td>
+      <td><input type="number" value="1" min="1" style="width: 60px;" /></td>
+      <td>12,000đ</td>
+      <td><button >❌</button></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="3" style="text-align: right; font-weight: bold;">Tổng tiền:</td>
+      <td id="totalAmount">37,000đ</td>
+      <td></td>
+    </tr>
+  </tfoot>
+</table>
+
+  <!-- Phương thức thanh toán -->
+  <div style="margin-bottom: 20px;">
+    <label>Phương thức thanh toán:</label><br />
+    <input type="radio" id="paymentCash" name="paymentMethod" value="Tiền mặt" checked />
+    <label for="paymentCash">Tiền mặt</label><br />
+    <input type="radio" id="paymentCard" name="paymentMethod" value="Thẻ tín dụng" />
+    <label for="paymentCard">Thẻ tín dụng</label><br />
+    <input type="radio" id="paymentOnline" name="paymentMethod" value="Chuyển khoản" />
+    <label for="paymentOnline">Chuyển khoản</label>
+  </div>
+
+  <!-- Nút in hóa đơn -->
+  <button id="printInvoiceBtn">🖨️ In hóa đơn</button>
+</section >
+
+
+<section id = "inventory"><h2>Quản lý nhập kho</h2>
+  <h2>Tạo phiếu nhập kho mới</h2>
+
+  <form id="purchase-form">
+    <div>
+      <label for="supplier">Nhà cung cấp:</label>
+      <select id="supplier" required>
+        <option value="">-- Chọn nhà cung cấp --</option>
+        <option value="NCC001">Công ty ABC</option>
+        <option value="NCC002">Công ty XYZ</option>
+        <option value="NCC003">Công ty 123</option>
+      </select>
+    </div>
+
+    <h3>Thêm sản phẩm</h3>
+
+    <div>
+      <label for="product">Sản phẩm:</label>
+      <select id="product" required>
+        <option value="">-- Chọn sản phẩm --</option>
+        <option value="SP001">Sản phẩm A</option>
+        <option value="SP002">Sản phẩm B</option>
+        <option value="SP003">Sản phẩm C</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="quantity">Số lượng:</label>
+      <input type="number" id="quantity" min="1" value="1" required />
+    </div>
+
+    <div>
+      <label for="price">Giá nhập (VNĐ):</label>
+      <input type="number" id="price" min="1000" step="100" value="1000" required />
+    </div>
+
+    <button type="button" id="add-product-btn">Thêm sản phẩm vào phiếu</button>
+  </form>
+
+  <div id="products-list">
+    <h3>Danh sách sản phẩm trong phiếu nhập</h3>
+    <table id="products-table" border="1"  style="border-collapse: collapse; width: 100%;">
+      <thead>
+        <tr>
+          <th>Mã SP</th>
+          <th>Tên sản phẩm</th>
+          <th>Số lượng</th>
+          <th>Giá nhập (VNĐ)</th>
+          <th>Thành tiền (VNĐ)</th>
+          <th>Xóa</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <td colspan="4" style="text-align:right;"><strong>Tổng cộng:</strong></td>
+          <td id="total-amount" colspan="2">0</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <button id="print-btn" style="margin-top:20px;">In phiếu nhập</button>
+</section>
+
+
+<!-- Báo cáo -->
+<section id="reports"><h2>Báo cáo thống kê</h2>
+  <div>
+    <label for="report-select">Chọn loại báo cáo:</label>
+    <select id="report-select">
+      <option value="">-- Chọn báo cáo --</option>
+      <option value="revenue">Doanh thu</option>
+      <option value="best-sellers">Sản phẩm bán chạy</option>
+      <option value="inventory">Tồn kho</option>
+      <option value="profit">Lợi nhuận</option>
+    </select>
+    <button id="generate-report">Tạo báo cáo</button>
+    <button id="export-csv" >Xuất CSV</button>
+  </div>
+
+  <div id="report-result" style="margin-top:20px; white-space: pre-wrap; font-family: monospace;"></div>
+</section>
+    </div>
+  </div>
+
 
   <script>
-    function showMessage() {
-      const container = document.getElementById("container");
-      const newMessage = document.createElement("p");
-      newMessage.className = "message";
-      newMessage.textContent = "CÓ CÁI NỊT HA HA HA HA HA HA";
-      container.appendChild(newMessage);
+    function login() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      if (username === "admin" && password === "123") {
+        document.getElementById("login-screen").classList.add("hidden");
+        document.getElementById("app").classList.remove("hidden");
+      } else {
+        alert("Sai tên đăng nhập hoặc mật khẩu");
+      }
     }
+
+    function show(sectionId) {
+      document.querySelectorAll(".main section").forEach(sec => {
+        sec.classList.remove("active");
+      });
+      document.getElementById(sectionId).classList.add("active");
+    }
+  
   </script>
+
 </body>
 </html>
